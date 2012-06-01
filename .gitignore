@@ -1,0 +1,12 @@
+/apps/*/ebin
+/apps/*/.eunit
+/deps/
+/priv/
+/doc/*
+!/doc/overview.edoc
+*.o
+*.beam
+*.app
+*.plt
+rebar
+.travis.yml

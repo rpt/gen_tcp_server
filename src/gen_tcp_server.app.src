@@ -1,0 +1,9 @@
+{application, gen_tcp_server,
+ [{description, "Generic TCP Server"},
+  {vsn, "0.1"},
+  {modules, []},
+  {registered, []},
+  {applications, [kernel,
+                  stdlib]},
+  {build_dependencies, []},
+  {env, []}]}.
