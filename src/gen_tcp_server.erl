@@ -16,7 +16,7 @@
 %% @doc Start gen_tcp_server.
 -spec start_link(atom(), integer(), term()) -> {ok, pid()} | ignore |
                                                {error, term()}.
-start_link(HandlerModule, Port, InitState) ->
-    {ok, Pid} = gen_tcp_server_sup:start_link(HandlerModule, Port, InitState),
+start_link(HandlerModule, Port, Opts) ->
+    {ok, Pid} = gen_tcp_server_sup:start_link(HandlerModule, Port, Opts),
     {ok, _} = supervisor:start_child(Pid, []),
     {ok, Pid}.

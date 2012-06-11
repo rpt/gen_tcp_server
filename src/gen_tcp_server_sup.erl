@@ -14,6 +14,8 @@
 %% Supervisor callbacks
 -export([init/1]).
 
+-include("gen_tcp_server.hrl").
+
 %%%-----------------------------------------------------------------------------
 %%% Internal API functions
 %%%-----------------------------------------------------------------------------
@@ -21,8 +23,8 @@
 %% @private
 %% @doc Start the handler supervisor.
 -spec start_link(atom(), integer(), term()) -> term().
-start_link(HandlerModule, Port, InitState) ->
-    Opts = [binary, {packet, raw}, {active, once}, {reuseaddr, true}],
+start_link(HandlerModule, Port, UserOpts) ->
+    Opts = UserOpts ++ ?GEN_TCP_SERVER_OPTS,
     {ok, LSocket} = gen_tcp:listen(Port, Opts),
     supervisor:start_link(?MODULE, [LSocket, HandlerModule, InitState]).
 
