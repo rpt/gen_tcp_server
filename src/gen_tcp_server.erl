@@ -7,7 +7,8 @@
 -module(gen_tcp_server).
 
 %% API
--export([start_link/3]).
+-export([start_link/2,
+         start_link/3]).
 
 %%%-----------------------------------------------------------------------------
 %%% gen_tcp_server callbacks
@@ -23,7 +24,12 @@
 %%% API functions
 %%%-----------------------------------------------------------------------------
 
-%% @doc Start gen_tcp_server.
+%% @doc Start gen_tcp_server with default options.
+-spec start_link(atom(), integer()) -> {ok, pid()} | ignore | {error, term()}.
+start_link(HandlerModule, Port) ->
+    start_link(HandlerModule, Port, []).
+
+%% @doc Start gen_tcp_server with custom options for gen_tcp:listen.
 -spec start_link(atom(), integer(), term()) -> {ok, pid()} | ignore |
                                                {error, term()}.
 start_link(HandlerModule, Port, Opts) ->

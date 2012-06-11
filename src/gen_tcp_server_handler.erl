@@ -63,7 +63,7 @@ handle_cast(_Msg, State) ->
 %% @private
 handle_info(timeout, #state{parent = Parent, socket = LSocket} = State) ->
     {ok, Socket} = gen_tcp:accept(LSocket),
-    error_logger:error_msg("Accepted a new connection from ~p", [Socket]),
+    error_logger:info_msg("Accepted a new connection from ~p", [Socket]),
 
     %% Start new child to wait for the next connection.
     supervisor:start_child(Parent, []),
