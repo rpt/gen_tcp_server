@@ -6,13 +6,14 @@
 %%%-----------------------------------------------------------------------------
 -module(echo_server).
 
--behaviour(gen_tcp_server_handler).
+-behaviour(gen_tcp_server).
 
 %% API
 -export([run/1]).
 
-%% gen_tcp_server_handler callback
--export([handle/3]).
+%% gen_tcp_server callback
+-export([init_tcp_handler/0,
+         handle_tcp/3]).
 
 -record(state, {}).
 
@@ -23,13 +24,17 @@
 %% @doc Start a TCP echo server.
 -spec run(integer()) -> ok
 run(Port) ->
-    gen_tcp_server:start(?MODULE, Port, #state{}).
+    gen_tcp_server:start(?MODULE, Port).
 
 %%%-----------------------------------------------------------------------------
 %%% gen_tcp_server_handler callback
 %%%-----------------------------------------------------------------------------
 
 %% @private
-handle(Socket, Data, State) ->
+init_tcp_handler() ->
+    {ok, #state{}}.
+
+%% @private
+handle_tcp(Socket, Data, State) ->
     gen_tcp:send(Socket, Data),
     {ok, State}.
