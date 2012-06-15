@@ -11,11 +11,14 @@
          start_link/3]).
 
 %%%-----------------------------------------------------------------------------
-%%% gen_tcp_server callbacks
+%%% gen_tcp_server callback definitions
 %%%-----------------------------------------------------------------------------
 
--callback init_tcp_handler() -> {ok, State :: term()} |
-                                {stop, Reason :: term()}.
+-callback init_handler() ->
+    {ok, State :: term()} | {stop, Reason :: term()}.
+
+-callback handle_accept(Socket :: term(), State :: term()) ->
+    {ok, NewState :: term()} | {stop, Reason :: term()}.
 
 -callback handle_tcp(Socket :: term(), Data :: binary(), State :: term()) ->
     {ok, NewState :: term()} | {stop, Reason :: term()}.

@@ -20,7 +20,7 @@
          code_change/3]).
 
 -record(state, {
-          parent :: pid(),
+          supervisor :: pid(),
           handler :: atom(),
           socket :: term(),
           state :: term()
@@ -44,10 +44,10 @@ start_link(LSocket, HandlerModule, InitState) ->
 %%%-----------------------------------------------------------------------------
 
 %% @private
-init([Parent, LSocket, HandlerModule, InitState]) ->
+init([Supervisor, LSocket, HandlerModule, InitState]) ->
     %% Timeout 0 will send a timeout message to the gen_server
     %% to handle gen_tcp:accept before any other message.
-    {ok, #state{parent = Parent,
+    {ok, #state{supervisor = Supervisor,
                 handler = HandlerModule,
                 socket = LSocket,
                 state = InitState}, 0}.
@@ -61,14 +61,20 @@ handle_cast(_Msg, State) ->
     {noreply, State}.
 
 %% @private
-handle_info(timeout, #state{parent = Parent, socket = LSocket} = State) ->
+handle_info(timeout, #state{supervisor = Supervisor, handler = HandlerModule,
+                            socket = LSocket, state = HandlerState} = State) ->
     {ok, Socket} = gen_tcp:accept(LSocket),
     error_logger:info_msg("Accepted a new connection from ~p", [Socket]),
 
     %% Start new child to wait for the next connection.
-    supervisor:start_child(Parent, []),
+    supervisor:start_child(Supervisor, []),
 
-    {noreply, State#state{socket = Socket}};
+    case HandlerModule:handle_accept(Socket, HandlerState) of
+        {ok, NewHandlerState} ->
+            {noreply, State#state{socket = Socket, state = NewHandlerState}};
+        {stop, Reason} ->
+            {stop, Reason, State}
+    end;
 handle_info({tcp, Socket, Data}, #state{handler = HandlerModule,
                                         socket = Socket,
                                         state = HandlerState} = State) ->
