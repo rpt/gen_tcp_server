@@ -26,8 +26,7 @@
 start_link(HandlerModule, Port, UserOpts) ->
     Opts = UserOpts ++ ?GEN_TCP_SERVER_OPTS,
     {ok, LSocket} = gen_tcp:listen(Port, Opts),
-    {ok, InitState} = HandlerModule:init_handler(),
-    supervisor:start_link(?MODULE, [LSocket, HandlerModule, InitState]).
+    supervisor:start_link(?MODULE, [LSocket, HandlerModule]).
 
 %%%-----------------------------------------------------------------------------
 %%% Supervisor callbacks

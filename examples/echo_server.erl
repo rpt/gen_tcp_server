@@ -11,8 +11,8 @@
 %% API
 -export([run/1]).
 
-%% gen_tcp_server callback
--export([init_tcp_handler/0,
+%% gen_tcp_server callbacks
+-export([handle_accept/1,
          handle_tcp/3]).
 
 -record(state, {}).
@@ -22,16 +22,16 @@
 %%%-----------------------------------------------------------------------------
 
 %% @doc Start a TCP echo server.
--spec run(integer()) -> ok
+-spec run(integer()) -> ok.
 run(Port) ->
-    gen_tcp_server:start(?MODULE, Port).
+    gen_tcp_server:start_link(?MODULE, Port).
 
 %%%-----------------------------------------------------------------------------
-%%% gen_tcp_server_handler callback
+%%% gen_tcp_server_handler callbacks
 %%%-----------------------------------------------------------------------------
 
 %% @private
-init_tcp_handler() ->
+handle_accept(_Socket) ->
     {ok, #state{}}.
 
 %% @private

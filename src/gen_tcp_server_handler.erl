@@ -9,7 +9,7 @@
 -behaviour(gen_server).
 
 %% Internal API
--export([start_link/3]).
+-export([start_link/2]).
 
 %% gen_server callbacks
 -export([init/1,
@@ -32,25 +32,22 @@
 
 %% @private
 %% @doc Start gen_server.
--spec start_link(term(), atom(), term()) -> {ok, pid()} | ignore |
-                                            {error, term()}.
-start_link(LSocket, HandlerModule, InitState) ->
+-spec start_link(term(), atom()) -> {ok, pid()} | ignore | {error, term()}.
+start_link(LSocket, HandlerModule) ->
     error_logger:info_msg("A new handler is waiting for a connection", []),
-    gen_server:start_link(?MODULE, [self(), LSocket,
-                                    HandlerModule, InitState], []).
+    gen_server:start_link(?MODULE, [self(), LSocket, HandlerModule], []).
 
 %%%-----------------------------------------------------------------------------
 %%% gen_server callbacks
 %%%-----------------------------------------------------------------------------
 
 %% @private
-init([Supervisor, LSocket, HandlerModule, InitState]) ->
+init([Supervisor, LSocket, HandlerModule]) ->
     %% Timeout 0 will send a timeout message to the gen_server
     %% to handle gen_tcp:accept before any other message.
     {ok, #state{supervisor = Supervisor,
                 handler = HandlerModule,
-                socket = LSocket,
-                state = InitState}, 0}.
+                socket = LSocket}, 0}.
 
 %% @private
 handle_call(_Request, _From, State) ->
@@ -62,16 +59,16 @@ handle_cast(_Msg, State) ->
 
 %% @private
 handle_info(timeout, #state{supervisor = Supervisor, handler = HandlerModule,
-                            socket = LSocket, state = HandlerState} = State) ->
+                            socket = LSocket} = State) ->
     {ok, Socket} = gen_tcp:accept(LSocket),
     error_logger:info_msg("Accepted a new connection from ~p", [Socket]),
 
     %% Start new child to wait for the next connection.
     supervisor:start_child(Supervisor, []),
 
-    case HandlerModule:handle_accept(Socket, HandlerState) of
-        {ok, NewHandlerState} ->
-            {noreply, State#state{socket = Socket, state = NewHandlerState}};
+    case HandlerModule:handle_accept(Socket) of
+        {ok, HandlerState} ->
+            {noreply, State#state{socket = Socket, state = HandlerState}};
         {stop, Reason} ->
             {stop, Reason, State}
     end;

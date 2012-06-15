@@ -14,11 +14,8 @@
 %%% gen_tcp_server callback definitions
 %%%-----------------------------------------------------------------------------
 
--callback init_handler() ->
+-callback handle_accept(Socket :: term()) ->
     {ok, State :: term()} | {stop, Reason :: term()}.
-
--callback handle_accept(Socket :: term(), State :: term()) ->
-    {ok, NewState :: term()} | {stop, Reason :: term()}.
 
 -callback handle_tcp(Socket :: term(), Data :: binary(), State :: term()) ->
     {ok, NewState :: term()} | {stop, Reason :: term()}.
