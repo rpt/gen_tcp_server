@@ -1,9 +1,10 @@
-/apps/*/ebin
-/apps/*/.eunit
+/apps/*/ebin/
+/apps/*/.eunit/
 /deps/
 /priv/
 /doc/*
 !/doc/overview.edoc
+/.eunit/
 *.o
 *.beam
 *.app
