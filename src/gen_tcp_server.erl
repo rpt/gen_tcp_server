@@ -8,7 +8,8 @@
 
 %% API
 -export([start_link/2,
-         start_link/3]).
+         start_link/3,
+         stop/1]).
 
 %%%-----------------------------------------------------------------------------
 %%% gen_tcp_server callback definitions
@@ -36,3 +37,8 @@ start_link(HandlerModule, Port, Opts) ->
     {ok, Pid} = gen_tcp_server_sup:start_link(HandlerModule, Port, Opts),
     {ok, _} = supervisor:start_child(Pid, []),
     {ok, Pid}.
+
+%% @doc Stop gen_tcp_server.
+-spec stop(pid()) -> true.
+stop(Pid) ->
+    exit(Pid, normal).
