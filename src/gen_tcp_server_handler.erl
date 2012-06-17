@@ -61,17 +61,25 @@ handle_cast(_Msg, State) ->
 %% @private
 handle_info(timeout, #state{supervisor = Supervisor, handler = HandlerModule,
                             lsocket = LSocket} = State) ->
-    {ok, Socket} = gen_tcp:accept(LSocket),
-    error_logger:info_msg("Accepted a new connection from ~p", [Socket]),
+    case gen_tcp:accept(LSocket) of
+        {ok, Socket} ->
+            error_logger:info_msg("Accepted a new connection from ~p",
+                                  [Socket]),
 
-    %% Start new child to wait for the next connection.
-    supervisor:start_child(Supervisor, []),
+            %% Start new child to wait for the next connection.
+            supervisor:start_child(Supervisor, []),
 
-    case HandlerModule:handle_accept(Socket) of
-        {ok, HandlerState} ->
-            {noreply, State#state{socket = Socket, state = HandlerState}};
-        {stop, Reason} ->
-            {stop, Reason, State}
+            case HandlerModule:handle_accept(Socket) of
+                {ok, HandlerState} ->
+                    {noreply, State#state{socket = Socket,
+                                          state = HandlerState}};
+                {stop, Reason} ->
+                    {stop, {handle_accept_error, Reason}, State};
+                _ ->
+                    {stop, {handle_accept_error, bad_return}, State}
+            end;
+        {error, Reason} ->
+            {stop, {gen_tcp_accept_error, Reason}, State}
     end;
 handle_info({tcp, Socket, Data}, #state{handler = HandlerModule,
                                         socket = Socket,
@@ -82,9 +90,9 @@ handle_info({tcp, Socket, Data}, #state{handler = HandlerModule,
         {ok, NewHandlerState} ->
             {noreply, State#state{state = NewHandlerState}};
         {error, Reason} ->
-            {stop, Reason, State};
+            {stop, {handle_tcp_error, Reason}, State};
         _ ->
-            {stop, bad_handler, State}
+            {stop, {handle_tcp_error, bad_return}, State}
     end;
 handle_info({tcp_closed, Socket}, State) ->
     error_logger:info_msg("Socket ~p closed", [Socket]),
@@ -96,10 +104,14 @@ handle_info(_Info, State) ->
     {noreply, State}.
 
 %% @private
-terminate(_Reason, #state{lsocket = LSocket, socket = Socket}) ->
+terminate(_Reason, #state{socket = Socket}) ->
     %% Close the sockets
-    gen_tcp:close(LSocket),
-    gen_tcp:close(Socket),
+    if
+        Socket /= undefined ->
+            gen_tcp:close(Socket);
+        true ->
+            ok
+    end,
     ok.
 
 %% @private
