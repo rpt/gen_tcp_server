@@ -22,6 +22,7 @@
 -record(state, {
           supervisor :: pid(),
           handler :: atom(),
+          lsocket :: term(),
           socket :: term(),
           state :: term()
          }).
@@ -47,7 +48,7 @@ init([Supervisor, LSocket, HandlerModule]) ->
     %% to handle gen_tcp:accept before any other message.
     {ok, #state{supervisor = Supervisor,
                 handler = HandlerModule,
-                socket = LSocket}, 0}.
+                lsocket = LSocket}, 0}.
 
 %% @private
 handle_call(_Request, _From, State) ->
@@ -59,7 +60,7 @@ handle_cast(_Msg, State) ->
 
 %% @private
 handle_info(timeout, #state{supervisor = Supervisor, handler = HandlerModule,
-                            socket = LSocket} = State) ->
+                            lsocket = LSocket} = State) ->
     {ok, Socket} = gen_tcp:accept(LSocket),
     error_logger:info_msg("Accepted a new connection from ~p", [Socket]),
 
@@ -95,7 +96,9 @@ handle_info(_Info, State) ->
     {noreply, State}.
 
 %% @private
-terminate(_Reason, #state{socket = Socket}) ->
+terminate(_Reason, #state{lsocket = LSocket, socket = Socket}) ->
+    %% Close the sockets
+    gen_tcp:close(LSocket),
     gen_tcp:close(Socket),
     ok.
 

@@ -24,17 +24,20 @@
 %% @doc Start the handler supervisor.
 -spec start_link(atom(), integer(), term()) -> term().
 start_link(HandlerModule, Port, UserOpts) ->
-    Opts = UserOpts ++ ?GEN_TCP_SERVER_OPTS,
-    {ok, LSocket} = gen_tcp:listen(Port, Opts),
-    supervisor:start_link(?MODULE, [LSocket, HandlerModule]).
+    supervisor:start_link(?MODULE, [HandlerModule, Port, UserOpts]).
 
 %%%-----------------------------------------------------------------------------
 %%% Supervisor callbacks
 %%%-----------------------------------------------------------------------------
 
 %% @private
-init(Args) ->
+init([HandlerModule, Port, UserOpts]) ->
+    %% Open listening socket
+    Opts = UserOpts ++ ?GEN_TCP_SERVER_OPTS,
+    {ok, LSocket} = gen_tcp:listen(Port, Opts),
+
     HandlerSpec = {gen_tcp_server_handler,
-                   {gen_tcp_server_handler, start_link, Args},
-                   temporary, brutal_kill, worker, [gen_tcp_server_handler]},
+                   {gen_tcp_server_handler, start_link, [LSocket,
+                                                         HandlerModule]},
+                   temporary, infinity, worker, [gen_tcp_server_handler]},
     {ok, {{simple_one_for_one, 0, 1}, [HandlerSpec]}}.
