@@ -3,17 +3,33 @@ Generic TCP Server
 
 [![Build Status][travis_ci_image]][travis_ci]
 
-Generic TCP Server (`gen_tcp_server`) is an Erlang behaviour providing quick and
+**Generic TCP Server** (`gen_tcp_server`) is an Erlang behaviour providing quick and
 easy way to add TCP server functionality to you application. It's implemented as
 a supervisor managing TCP connections as it's children.
+
+How to use it?
+-----------
+
+ * Run `make` to build.
+ * Run `make test` to run tests.
+ * Add as a rebar dependency in your application:
+
+        {deps,  [{gen_tcp_server, ".*", {git, "git://github.com/rpt/gen_tcp_server.git"}}]}.
 
 Callbacks
 --------
 
-`handle_accept(Socket :: socket()) -> {ok, State :: term()} |
-                                      {stop, Reason :: term()}.`
-`handle_tcp(Socket :: socket(), Data :: binary(), State :: term()) ->
-     {ok, State :: term()} | {stop, Reason :: term()}.`
+The `gen_tcp_server` behaviour specifies two callbacks:
+
+ * `handle_accept/1` - called on accepting a new connection
+
+        handle_accept(Socket :: socket()) -> {ok, State :: term()} |
+                                             {stop, Reason :: term()}.
+
+ * `handle_tcp/3` - for handling incoming TCP data
+
+        handle_tcp(Socket :: socket(), Data :: binary(), State :: term()) -> {ok, State :: term()} |
+                                                                             {stop, Reason :: term()}.
 
 Example
 -------
