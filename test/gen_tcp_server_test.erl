@@ -31,7 +31,11 @@ connection_test() ->
     %% Stop the server
     gen_tcp_server:stop(Pid),
     timer:sleep(100),
-    ?assertNot(is_process_alive(Pid)).
+    ?assertNot(is_process_alive(Pid)),
+
+    %% Try to connect to it again (should fail)
+    ?assertEqual({error, econnrefused},
+                 gen_tcp:connect({127,0,0,1}, ?PORT, [])).
 
 %%%-----------------------------------------------------------------------------
 %%% Helper functions
