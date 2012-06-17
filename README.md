@@ -1,6 +1,8 @@
 Generic TCP Server
 ==================
 
+[![Build Status][travis_ci_image]][travis_ci]
+
 Generic TCP Server (`gen_tcp_server`) is an Erlang behaviour providing quick and
 easy way to add TCP server functionality to you application. It's implemented as
 a supervisor managing TCP connections as it's children.
@@ -21,3 +23,7 @@ Simple `echo_server` example showing how to use `gen_tcp_server` can be found
 
 [echo_server.erl]:
 https://github.com/rpt/gen_tcp_server/blob/master/examples/echo_server.erl
+[travis_ci]:
+http://travis-ci.org/rpt/gen_tcp_server
+[travis_ci_image]:
+https://secure.travis-ci.org/rpt/gen_tcp_server.png
