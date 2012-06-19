@@ -7,4 +7,5 @@
 
 -define(GEN_TCP_SERVER_OPTS, [binary,
                               {packet, raw},
-                              {active, once}]).
+                              {active, once},
+                              {reuseaddr, true}]).
