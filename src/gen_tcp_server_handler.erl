@@ -1,9 +1,22 @@
-%%%-----------------------------------------------------------------------------
-%%% @copyright 2012 Krzysztof Rutka
-%%% @author Krzysztof Rutka <krzysztof.rutka@gmail.com>
-%%% @doc Connection handler module.
-%%% @end
-%%%-----------------------------------------------------------------------------
+%%------------------------------------------------------------------------------
+%% Copyright 2012 Krzysztof Rutka
+%%
+%% Licensed under the Apache License, Version 2.0 (the "License");
+%% you may not use this file except in compliance with the License.
+%% You may obtain a copy of the License at
+%%
+%%     http://www.apache.org/licenses/LICENSE-2.0
+%%
+%% Unless required by applicable law or agreed to in writing, software
+%% distributed under the License is distributed on an "AS IS" BASIS,
+%% WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+%% See the License for the specific language governing permissions and
+%% limitations under the License.
+%%------------------------------------------------------------------------------
+
+%% @author Krzysztof Rutka <krzysztof.rutka@gmail.com>
+%% @copyright 2012 Krzysztof Rutka
+%% @doc Connection handler module.
 -module(gen_tcp_server_handler).
 
 -behaviour(gen_server).
@@ -27,9 +40,9 @@
           state :: term()
          }).
 
-%%%-----------------------------------------------------------------------------
-%%% Internal API functions
-%%%-----------------------------------------------------------------------------
+%%------------------------------------------------------------------------------
+%% Internal API functions
+%%------------------------------------------------------------------------------
 
 %% @private
 %% @doc Start gen_server.
@@ -38,9 +51,9 @@ start_link(LSocket, HandlerModule) ->
     error_logger:info_msg("A new handler is waiting for a connection", []),
     gen_server:start_link(?MODULE, [self(), LSocket, HandlerModule], []).
 
-%%%-----------------------------------------------------------------------------
-%%% gen_server callbacks
-%%%-----------------------------------------------------------------------------
+%%------------------------------------------------------------------------------
+%% gen_server callbacks
+%%------------------------------------------------------------------------------
 
 %% @private
 init([Supervisor, LSocket, HandlerModule]) ->
