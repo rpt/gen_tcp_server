@@ -1,5 +1,27 @@
 @copyright 2012 Krzysztof Rutka
 @author Krzysztof Rutka <krzysztof.rutka@gmail.com>
-@version 0.1
+@version 0.9
 @title Generic TCP Server
-@doc To be done...
+@doc
+<h2>About</h2>
+<p>
+  Generic TCP Server (<code>gen_tcp_server</code>) is an Erlang behaviour providing quick
+  and easy way to add TCP server functionality to you application. It's
+  implemented as a supervisor managing TCP connections as it's children.
+</p>
+<h2>Callbacks</h2>
+<p>
+  The gen_tcp_server behaviour specifies two callbacks:
+</p>
+<ul>
+  <li>
+    handle_accept/1 - called on accepting a new connection
+    <pre>handle_accept(Socket :: socket()) -> {ok, State :: term()} |
+                                     {stop, Reason :: term()}.</pre>
+  </li>
+  <li>
+    handle_tcp/3 - for handling incoming TCP data
+    <pre>handle_tcp(Socket :: socket(), Data :: binary(), State :: term()) -> {ok, State :: term()} |
+                                                                     {stop, Reason :: term()}.</pre>
+  </li>
+</ul>

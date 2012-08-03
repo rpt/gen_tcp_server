@@ -17,6 +17,7 @@
 %% @author Krzysztof Rutka <krzysztof.rutka@gmail.com>
 %% @copyright 2012 Krzysztof Rutka
 %% @doc Supervisor for connection handlers.
+%% @private
 -module(gen_tcp_server_sup).
 
 -behaviour(supervisor).

@@ -1,6 +1,6 @@
 {application, gen_tcp_server,
  [{description, "Generic TCP Server"},
-  {vsn, "0.1"},
+  {vsn, "0.9"},
   {modules, []},
   {registered, []},
   {applications, [kernel,

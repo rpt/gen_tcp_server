@@ -17,6 +17,7 @@
 %% @author Krzysztof Rutka <krzysztof.rutka@gmail.com>
 %% @copyright 2012 Krzysztof Rutka
 %% @doc Connection handler module.
+%% @private
 -module(gen_tcp_server_handler).
 
 -behaviour(gen_server).
