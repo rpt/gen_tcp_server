@@ -34,6 +34,11 @@
 -callback handle_tcp(Socket :: term(), Data :: binary(), State :: term()) ->
     {ok, NewState :: term()} | {stop, Reason :: term()}.
 
+-callback handle_close(Socket :: term(),
+                       Reason :: normal | {tcp_error, term()} |
+                                 {handle_accept_error, term()} |
+                                 {handle_tcp_error, term()}) -> ok.
+
 %%------------------------------------------------------------------------------
 %% API functions
 %%------------------------------------------------------------------------------
