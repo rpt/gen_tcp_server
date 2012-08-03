@@ -18,6 +18,7 @@
 %% @copyright 2012 Krzysztof Rutka
 %% @doc Main header file for the generic TCP server.
 
+%% Default options for gen_tcp:listen/3.
 -define(GEN_TCP_SERVER_OPTS, [binary,
                               {packet, raw},
                               {active, once},

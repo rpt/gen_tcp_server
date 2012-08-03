@@ -44,13 +44,14 @@
 %%------------------------------------------------------------------------------
 
 %% @doc Start gen_tcp_server with default options.
--spec start_link(atom(), integer()) -> {ok, pid()} | ignore | {error, term()}.
+-spec start_link(atom(), integer()) -> {ok, Pid :: pid()} | ignore |
+                                       {error, Reason :: term()}.
 start_link(HandlerModule, Port) ->
     start_link(HandlerModule, Port, []).
 
 %% @doc Start gen_tcp_server with custom options for gen_tcp:listen.
--spec start_link(atom(), integer(), term()) -> {ok, pid()} | ignore |
-                                               {error, term()}.
+-spec start_link(atom(), integer(), term()) -> {ok, Pid :: pid()} | ignore |
+                                               {error, Reason :: term()}.
 start_link(HandlerModule, Port, Opts) ->
     {ok, Pid} = gen_tcp_server_sup:start_link(HandlerModule, Port, Opts),
     {ok, _} = supervisor:start_child(Pid, []),

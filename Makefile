@@ -1,19 +1,27 @@
-.PHONY: all compile test clean doc
+.PHONY: all compile test dialyzer clean doc
 
-all: compile
+APPS = kernel stdlib
 
-compile: rebar
-	./rebar compile
+compile: rebar examples/*.erl
+	@./rebar compile
+	@(cd examples && erlc -pa ../ebin *.erl)
+
+test: rebar
+	@./rebar eunit
+
+dialyzer: build.plt compile
+	dialyzer --plt $< ebin
+
+build.plt:
+	dialyzer -q --build_plt --apps $(APPS) --output_plt $@
 
 clean: rebar
-	./rebar clean
+	@./rebar clean
+	@rm -f examples/*.beam
 
-test: compile
-	./rebar skip_deps=true eunit
+doc: rebar
+	@./rebar doc
 
 rebar:
-	wget -q http://cloud.github.com/downloads/basho/rebar/rebar
-	chmod u+x rebar
-
-doc:
-	./rebar skip_deps=true doc
+	@wget -q http://cloud.github.com/downloads/basho/rebar/rebar
+	@chmod u+x rebar

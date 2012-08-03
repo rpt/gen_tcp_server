@@ -10,3 +10,4 @@
 *.app
 *.plt
 rebar
+erl_crash.dump
