@@ -49,7 +49,6 @@
 %% @doc Start gen_server.
 -spec start_link(term(), atom()) -> {ok, pid()} | ignore | {error, term()}.
 start_link(LSocket, HandlerModule) ->
-    error_logger:info_msg("A new handler is waiting for a connection", []),
     gen_server:start_link(?MODULE, [self(), LSocket, HandlerModule], []).
 
 %%------------------------------------------------------------------------------
@@ -77,9 +76,6 @@ handle_info(timeout, #state{supervisor = Supervisor, handler = HandlerModule,
                             lsocket = LSocket} = State) ->
     case gen_tcp:accept(LSocket) of
         {ok, Socket} ->
-            error_logger:info_msg("Accepted a new connection from ~p",
-                                  [Socket]),
-
             %% Start new child to wait for the next connection.
             supervisor:start_child(Supervisor, []),
 
@@ -108,11 +104,9 @@ handle_info({tcp, Socket, Data}, #state{handler = HandlerModule,
         _ ->
             {stop, {handle_tcp_error, bad_return}, State}
     end;
-handle_info({tcp_closed, Socket}, State) ->
-    error_logger:info_msg("Socket ~p closed", [Socket]),
+handle_info({tcp_closed, _Socket}, State) ->
     {stop, normal, State};
-handle_info({tcp_error, Socket, Reason}, State) ->
-    error_logger:error_msg("Error on socket ~p: ~p", [Socket, Reason]),
+handle_info({tcp_error, _Socket, Reason}, State) ->
     {stop, {tcp_error, Reason}, State};
 handle_info(_Info, State) ->
     {noreply, State}.
