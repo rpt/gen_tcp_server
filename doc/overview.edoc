@@ -11,17 +11,23 @@
 </p>
 <h2>Callbacks</h2>
 <p>
-  The gen_tcp_server behaviour specifies two callbacks:
+  The gen_tcp_server behaviour specifies three callbacks:
 </p>
 <ul>
   <li>
-    handle_accept/1 - called on accepting a new connection
+    <code>handle_accept/1</code> - called on accepting a new connection
     <pre>handle_accept(Socket :: socket()) -> {ok, State :: term()} |
                                      {stop, Reason :: term()}.</pre>
   </li>
   <li>
-    handle_tcp/3 - for handling incoming TCP data
+    <code>handle_tcp/3</code> - for handling incoming TCP data
     <pre>handle_tcp(Socket :: socket(), Data :: binary(), State :: term()) -> {ok, State :: term()} |
                                                                      {stop, Reason :: term()}.</pre>
+  </li>
+  <li>
+    <code>handle_close/2</code> - called when socket is closed
+    <pre>handle_close(Socket :: socket(), Reason :: normal | {tcp_error, term()} |
+                                           {handle_accept_error, term()} |
+                                           {handle_tcp_error, term()} -> ok.</pre>
   </li>
 </ul>

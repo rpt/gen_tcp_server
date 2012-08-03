@@ -19,7 +19,7 @@ How to use it?
 Callbacks
 --------
 
-The `gen_tcp_server` behaviour specifies two callbacks:
+The `gen_tcp_server` behaviour specifies three callbacks:
 
  * `handle_accept/1` - called on accepting a new connection
 
@@ -30,6 +30,12 @@ The `gen_tcp_server` behaviour specifies two callbacks:
 
         handle_tcp(Socket :: socket(), Data :: binary(), State :: term()) -> {ok, State :: term()} |
                                                                              {stop, Reason :: term()}.
+
+ * `handle_close/2` - called when socket is closed
+
+        handle_close(Socket :: socket(), Reason :: normal | {tcp_error, term()} |
+                                                   {handle_accept_error, term()} |
+                                                   {handle_tcp_error, term()} -> ok.
 
 Example
 -------
