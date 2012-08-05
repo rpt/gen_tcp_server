@@ -31,11 +31,14 @@ The `gen_tcp_server` behaviour specifies three callbacks:
         handle_tcp(Socket :: socket(), Data :: binary(), State :: term()) -> {ok, State :: term()} |
                                                                              {stop, Reason :: term()}.
 
- * `handle_close/2` - called when socket is closed
+ * `handle_close/3` - called when socket is closed
 
-        handle_close(Socket :: socket(), Reason :: normal | {tcp_error, term()} |
-                                                   {handle_accept_error, term()} |
-                                                   {handle_tcp_error, term()} -> ok.
+        -type reason :: normal |
+                        {tcp_error, term()} |
+                        {handle_accept_error, term()} |
+                        {handle_tcp_error, term()}.
+
+        handle_close(Socket :: socket(), Reason :: reason(), State :: term()) -> ok.
 
 Example
 -------

@@ -37,7 +37,8 @@
 -callback handle_close(Socket :: term(),
                        Reason :: normal | {tcp_error, term()} |
                                  {handle_accept_error, term()} |
-                                 {handle_tcp_error, term()}) -> ok.
+                                 {handle_tcp_error, term()},
+                       State :: term()) -> ok.
 
 %%------------------------------------------------------------------------------
 %% API functions

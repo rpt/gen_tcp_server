@@ -27,7 +27,7 @@
 %% gen_tcp_server callbacks
 -export([handle_accept/1,
          handle_tcp/3,
-         handle_close/2]).
+         handle_close/3]).
 
 -record(state, {}).
 
@@ -54,5 +54,5 @@ handle_tcp(Socket, Data, State) ->
     {ok, State}.
 
 %% @private
-handle_close(_Socket, _Reason) ->
+handle_close(_Socket, _Reason, _State) ->
     ok.

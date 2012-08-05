@@ -25,9 +25,12 @@
                                                                      {stop, Reason :: term()}.</pre>
   </li>
   <li>
-    <code>handle_close/2</code> - called when socket is closed
-    <pre>handle_close(Socket :: socket(), Reason :: normal | {tcp_error, term()} |
-                                           {handle_accept_error, term()} |
-                                           {handle_tcp_error, term()} -> ok.</pre>
+    <code>handle_close/3</code> - called when socket is closed
+    <pre>-type reason :: normal |
+                {tcp_error, term()} |
+                {handle_accept_error, term()} |
+                {handle_tcp_error, term()}.
+
+handle_close(Socket :: socket(), Reason :: reason(), State :: term()) -> ok.</pre>
   </li>
 </ul>

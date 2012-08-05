@@ -112,7 +112,8 @@ handle_info(_Info, State) ->
     {noreply, State}.
 
 %% @private
-terminate(Reason, #state{handler = HandlerModule, socket = Socket}) ->
+terminate(Reason, #state{handler = HandlerModule, socket = Socket,
+                         state = HandlerState}) ->
     %% Close the sockets
     if
         Socket /= undefined ->
@@ -120,7 +121,7 @@ terminate(Reason, #state{handler = HandlerModule, socket = Socket}) ->
         true ->
             ok
     end,
-    HandlerModule:handle_close(Socket, Reason),
+    HandlerModule:handle_close(Socket, Reason, HandlerState),
     ok.
 
 %% @private
