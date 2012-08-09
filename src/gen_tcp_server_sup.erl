@@ -48,10 +48,27 @@ start_link(HandlerModule, Port, UserOpts) ->
 init([HandlerModule, Port, UserOpts]) ->
     %% Open listening socket
     Opts = UserOpts ++ ?GEN_TCP_SERVER_OPTS,
-    {ok, LSocket} = gen_tcp:listen(Port, Opts),
+    {ok, LSocket} = gen_tcp:listen(Port, remove_opts(Opts)),
 
     HandlerSpec = {gen_tcp_server_handler,
                    {gen_tcp_server_handler, start_link, [LSocket,
                                                          HandlerModule]},
                    temporary, infinity, worker, [gen_tcp_server_handler]},
     {ok, {{simple_one_for_one, 0, 1}, [HandlerSpec]}}.
+
+%%------------------------------------------------------------------------------
+%% Helper functions
+%%------------------------------------------------------------------------------
+
+%% @doc Removes custom opts.
+%% @private
+remove_opts(Opts) ->
+    remove_opts(Opts, Opts).
+
+%% @private
+remove_opts([], Opts) ->
+    Opts;
+remove_opts([{pool, _} | Rest], _Opts) ->
+    remove_opts(Rest, Rest);
+remove_opts([_ | Rest], Opts) ->
+    remove_opts(Rest, Opts).

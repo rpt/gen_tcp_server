@@ -51,11 +51,17 @@ start_link(HandlerModule, Port) ->
     start_link(HandlerModule, Port, []).
 
 %% @doc Start gen_tcp_server with custom options for gen_tcp:listen.
--spec start_link(atom(), integer(), term()) -> {ok, Pid :: pid()} | ignore |
-                                               {error, Reason :: term()}.
+-spec start_link(atom(), integer(), [term()]) -> {ok, Pid :: pid()} | ignore |
+                                                 {error, Reason :: term()}.
 start_link(HandlerModule, Port, Opts) ->
     {ok, Pid} = gen_tcp_server_sup:start_link(HandlerModule, Port, Opts),
-    {ok, _} = supervisor:start_child(Pid, []),
+    N = case lists:keyfind(pool, 1, Opts) of
+            false ->
+                1;
+            {pool, PoolSize} ->
+                PoolSize
+        end,
+    [{ok, _} = supervisor:start_child(Pid, []) || _ <- lists:seq(1, N)],
     {ok, Pid}.
 
 %% @doc Stop gen_tcp_server.
