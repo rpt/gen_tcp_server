@@ -34,3 +34,9 @@
 handle_close(Socket :: socket(), Reason :: reason(), State :: term()) -> ok.</pre>
   </li>
 </ul>
+<h2>Pool of acceptors</h2>
+<p>
+  To use a pool of acceptors use <code>gen_tcp_server:start_link/3</code> and specify a <code>pool</code> option.</p>
+<p>
+  For example: <code>gen_tcp_server:start_link(handler_module, 1234, [{pool, 10}]).</code>
+</p>

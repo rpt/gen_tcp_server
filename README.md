@@ -8,7 +8,7 @@ easy way to add TCP server functionality to you application. It's implemented as
 a supervisor managing TCP connections as it's children.
 
 How to use it?
------------
+--------------
 
  * Run `make` to build.
  * Run `make test` to run tests.
@@ -17,7 +17,7 @@ How to use it?
         {deps,  [{gen_tcp_server, ".*", {git, "git://github.com/rpt/gen_tcp_server.git"}}]}.
 
 Callbacks
---------
+---------
 
 The `gen_tcp_server` behaviour specifies three callbacks:
 
@@ -39,6 +39,15 @@ The `gen_tcp_server` behaviour specifies three callbacks:
                         {handle_tcp_error, term()}.
 
         handle_close(Socket :: socket(), Reason :: reason(), State :: term()) -> ok.
+
+Pool of acceptors
+-----------------
+
+To use a pool of acceptors use `gen_tcp_server:start_link/3` and specify a `pool` option.
+
+For example:
+
+    > gen_tcp_server:start_link(handler_module, 1234, [{pool, 10}]).
 
 Example
 -------
