@@ -34,7 +34,6 @@
 %% Internal API functions
 %%------------------------------------------------------------------------------
 
-%% @private
 %% @doc Start the handler supervisor.
 -spec start_link(atom(), integer(), term()) -> term().
 start_link(HandlerModule, Port, UserOpts) ->
@@ -44,7 +43,6 @@ start_link(HandlerModule, Port, UserOpts) ->
 %% Supervisor callbacks
 %%------------------------------------------------------------------------------
 
-%% @private
 init([HandlerModule, Port, UserOpts]) ->
     %% Open listening socket
     Opts = UserOpts ++ ?GEN_TCP_SERVER_OPTS,
@@ -60,12 +58,10 @@ init([HandlerModule, Port, UserOpts]) ->
 %% Helper functions
 %%------------------------------------------------------------------------------
 
-%% @doc Removes custom opts.
-%% @private
+%% @doc Remove custom opts.
 remove_opts(Opts) ->
     remove_opts(Opts, Opts).
 
-%% @private
 remove_opts([], Opts) ->
     Opts;
 remove_opts([{pool, _} | Rest], _Opts) ->

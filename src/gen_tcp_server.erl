@@ -50,7 +50,7 @@
 start_link(HandlerModule, Port) ->
     start_link(HandlerModule, Port, []).
 
-%% @doc Start gen_tcp_server with custom options for gen_tcp:listen.
+%% @doc Start gen_tcp_server with custom options.
 -spec start_link(atom(), integer(), [term()]) -> {ok, Pid :: pid()} | ignore |
                                                  {error, Reason :: term()}.
 start_link(HandlerModule, Port, Opts) ->

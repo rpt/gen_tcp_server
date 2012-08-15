@@ -45,7 +45,6 @@
 %% Internal API functions
 %%------------------------------------------------------------------------------
 
-%% @private
 %% @doc Start gen_server.
 -spec start_link(term(), atom()) -> {ok, pid()} | ignore | {error, term()}.
 start_link(LSocket, HandlerModule) ->
@@ -55,7 +54,6 @@ start_link(LSocket, HandlerModule) ->
 %% gen_server callbacks
 %%------------------------------------------------------------------------------
 
-%% @private
 init([Supervisor, LSocket, HandlerModule]) ->
     %% Timeout 0 will send a timeout message to the gen_server
     %% to handle gen_tcp:accept before any other message.
@@ -63,15 +61,12 @@ init([Supervisor, LSocket, HandlerModule]) ->
                 handler = HandlerModule,
                 lsocket = LSocket}, 0}.
 
-%% @private
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
 
-%% @private
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
-%% @private
 handle_info(timeout, #state{supervisor = Supervisor, handler = HandlerModule,
                             lsocket = LSocket} = State) ->
     case gen_tcp:accept(LSocket) of
@@ -111,7 +106,6 @@ handle_info({tcp_error, _Socket, Reason}, State) ->
 handle_info(_Info, State) ->
     {noreply, State}.
 
-%% @private
 terminate(Reason, #state{handler = HandlerModule, socket = Socket,
                          state = HandlerState}) ->
     %% Close the sockets
@@ -124,6 +118,5 @@ terminate(Reason, #state{handler = HandlerModule, socket = Socket,
     HandlerModule:handle_close(Socket, Reason, HandlerState),
     ok.
 
-%% @private
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.

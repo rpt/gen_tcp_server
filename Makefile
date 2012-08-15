@@ -1,8 +1,8 @@
-.PHONY: all compile test dialyzer clean doc
+.PHONY: compile test dialyzer clean
 
 APPS = kernel stdlib
 
-compile: rebar examples/*.erl
+compile: rebar
 	@./rebar compile
 	@(cd examples && erlc -pa ../ebin *.erl)
 
@@ -18,9 +18,6 @@ build.plt:
 clean: rebar
 	@./rebar clean
 	@rm -f examples/*.beam
-
-doc: rebar
-	@./rebar doc
 
 rebar:
 	@wget -q http://cloud.github.com/downloads/basho/rebar/rebar
