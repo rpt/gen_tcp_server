@@ -11,7 +11,7 @@ a supervisor managing TCP connections as it's children.
  * Add as a dependency to your `rebar.config`:
 
 ``` erlang
-{deps, [{gen_tcp_server, ".*", {git, "git://github.com/rpt/gen_tcp_server.git"}}]}.
+{gen_tcp_server, "", {git, "git://github.com/rpt/gen_tcp_server.git", {tag, "1.0.1"}}}
 ```
 
 ## Callbacks
