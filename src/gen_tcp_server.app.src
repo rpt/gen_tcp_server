@@ -1,6 +1,6 @@
 {application, gen_tcp_server,
  [{description, "Generic TCP Server"},
-  {vsn, "1.0"},
+  {vsn, "1.0.1"},
   {applications, [kernel,
                   stdlib]},
   {env, []}]}.
